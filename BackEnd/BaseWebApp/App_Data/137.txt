@@ -1,0 +1,61 @@
+﻿create table Marketplaces(
+MarketplaceId int auto_increment primary key,
+Name varchar(255),
+MarketplaceIdentifier varchar(255) not null,
+ServerUrl varchar(255) not null,
+TokenKey varchar(255));
+
+
+create table Channels(
+ChannelId int primary key auto_increment,
+AccountId int not null,
+Name varchar(255) not null,
+Type varchar (255) not null,
+Status varchar(45) not null,
+FinaleAccountName varchar(255) null,
+FinaleUsername varchar(255) null,
+FinalePassword varchar(255) null,
+FinaleToken varchar(255) null,
+AmazonSellerId varchar (255) null,
+AmazonToken varchar (255) null,
+MarketplaceId int null,
+CreatedUser varchar(255) null,
+LastSyncTime datetime null,
+CreatedTime datetime DEFAULT CURRENT_TIMESTAMP,
+ CONSTRAINT FOREIGN KEY (`AccountId`) REFERENCES `Accounts`(`AccountId`),
+ CONSTRAINT FOREIGN KEY (`MarketplaceId`) REFERENCES `Marketplaces`(`MarketplaceId`)
+);
+
+create table CustomFields(
+CustomFieldId int primary key auto_increment,
+AccountId int not null,
+Name varchar(255) not null,
+Active bit(1) default 1 not null,
+FinaleCustomFieldId varchar(255) null,
+AmazonCustomFieldId varchar(255) null,
+ShowOnProduct bit(1) default 1,
+OptionToFilter bit(1) default 1,
+CONSTRAINT FOREIGN KEY (`AccountId`) REFERENCES `Accounts`(`AccountId`)
+);
+
+create table ProductCustomFields(
+ProductCustomFieldId int primary key auto_increment,
+AccountId int not null,
+ProductId int not null,
+CustomFieldId int not null,
+Value varchar(255) not null,
+CONSTRAINT FOREIGN KEY (`AccountId`) REFERENCES `Accounts`(`AccountId`),
+CONSTRAINT FOREIGN KEY (`ProductId`) REFERENCES `Products`(`ProductId`),
+CONSTRAINT FOREIGN KEY (`CustomFieldId`) REFERENCES `CustomFields`(`CustomFieldId`)
+);
+
+//for on duplicate update functionality
+alter table ProductCustomFields add unique `ProductId_CustomFieldId_unique`(ProductId, CustomFieldId)
+
+
+//adding channels to Products table - changing unique combination
+alter table Products add column ChannelId int after AccountId;
+alter table Products drop index Product_Account_Unique;
+alter table Products add unique Account_Channel_Product_unique(AccountId, ChannelId,ProductId )
+update Products set ChannelId = 1 where ProductId > 1;
+alter table Products modify column ChannelId int not null, add constraint foreign key (ChannelId) references Channels(ChannelId)

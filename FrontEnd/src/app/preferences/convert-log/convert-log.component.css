@@ -1,0 +1,95 @@
+.exchange-icon {
+  width: 20px;
+}
+
+.exchange-icon--vertical {
+  transform: rotate(90deg);
+  margin: 14px 0 6px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.container {
+  padding: 10px 0;
+}
+
+.input-search {
+  max-width: 360px;
+}
+
+#dropdown-user .dropdown-item {
+  padding: 0.25rem .75rem;
+}
+
+.btn-tp-select {
+  height: 45px;
+  border-radius: 22.5px;
+  color: #8e8e8e;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-tp-select.dropdown-toggle:after {
+  border-top: 0.3em solid #0a55a1;
+}
+
+.log-date {
+  min-width: 135px;
+}
+
+.log_row {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  color: #959595;
+  max-width: 200px;
+}
+
+.prod-name .log_row.note {
+  white-space: nowrap;
+}
+
+.finale-id .note-label {
+  color: #0a55a1;
+}
+
+span.log-note {
+  overflow: hidden;
+  width: 750px;
+  display: inline-block;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.log_new {
+  position: absolute;
+  right: 0;
+  background: #0a55a1;
+  color: white;
+  padding: 5px 14px 5px 12px;
+  border-radius: 5px 0px 0px 5px;
+}
+
+.log_row--end {
+  justify-content: flex-end;
+}
+
+.log_row .bold {
+  color: #333;
+}
+
+.table-emb th:not(:first-child) {
+  color: #222;
+}
+
+.table-emb tr td {
+    border-bottom: 6px #ededed solid;
+}

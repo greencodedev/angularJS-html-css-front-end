@@ -1,0 +1,24 @@
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #2d659d;
+  padding-top: 40px;
+  margin-bottom: 10px;
+
+  &_tab {
+    cursor: pointer;
+
+    &--active {
+      color: #2d659d;
+      border-bottom: 4px solid #2d659d;
+    }
+  }
+
+  .tabs_link {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    padding: 18px 24px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+}

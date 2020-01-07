@@ -1,0 +1,55 @@
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10000;
+}
+header > div {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.bg-blue {
+  background-color: #0a55a1;
+}
+.profile-link {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 33px;
+}
+.profile-link span {
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.profile-name{
+  min-width: 149px;
+  display: inline-block;
+}
+.btn-tp-select {
+  height: 45px;
+  border-radius: 22.5px;
+  color: #8e8e8e;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+.btn-tp-select.dropdown-toggle:after {
+  border-top: 0.3em solid #0a55a1;
+}
+
+.btn-group:hover>.dropdown-menu {
+  display: block;
+}
+.header-logo {
+  height: 50px;
+}
+.container--hamburger .header-logo {
+  margin-left: 60px;
+}
+.container--sidebar .header-logo {
+  margin-left: 0;
+}

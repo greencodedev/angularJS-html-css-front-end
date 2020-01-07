@@ -1,0 +1,123 @@
+.table-emb {
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: normal;
+  border-top: 0;
+  color: #5a5a5a;
+}
+.table-emb__container {
+  position: relative;
+}
+.table-emb thead {
+  color: #8e8e8e;
+}
+.table-emb thead th {
+  padding: 20px 8px;
+  border-top: 0;
+  border-bottom: 1px #d5d5d5 solid;
+}
+.table-emb tr td {
+  padding: 12px;
+  border-bottom: 1px #d5d5d5 solid;
+}
+.btn-table-button {
+  border-radius: 20px;
+  font-size: 12px;
+  background-color: #0a55a1;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 8px 26px;
+  line-height: normal;
+  margin: 0 4px;
+}
+.btn-table-convert {
+  background-color: #2a7dd2;
+}
+.table-emb thead > :first-child, .table-emb tr > :first-child {
+  padding-left: 38px;
+}
+.table-emb thead > :last-child, .table-emb tr > :last-child {
+  padding-right: 38px;
+}
+.table-emb .circled {
+  background: #0a55a1;
+  border-radius: 50%;
+  padding: 4px;
+  width: 38px;
+  height: 38px;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.table-emb tr > :last-child.narrow {
+  padding-right: 0;
+}
+
+.table-emb .status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dedede;
+}
+
+.table-emb .status--center {
+  margin: auto;
+}
+
+.table-emb .status--true {
+  background: #4bbc31;
+}
+
+.table-emb .status--pending {
+  background: #bc8300;
+}
+
+.table-emb .status--pending {
+  background: #bc0d09;
+}
+
+.table-emb__button-like {
+  min-width: 100px;
+  padding: 8px;
+  color: #0a55a1;
+  opacity: 1;
+  font-weight: 600;
+}
+
+@media(max-width: 991px) {
+  .btn-table-print {
+    font-size: 10px;
+    padding: 5px 15px;
+  }
+  .table-emb {
+    font-size: 10px;
+  }
+  .table-emb thead th {
+    padding: 6px;
+    font-size: 8px;
+  }
+  .table-emb tr td {
+    padding: 6px;
+  }
+  .table-emb thead > :first-child, .table-emb tr > :first-child {
+    padding-left: 12px;
+  }
+  .table-emb thead > :last-child, .table-emb tr > :last-child {
+    padding-right: 12px;
+  }
+}
+@media(max-width: 575px) {
+  .emb-pagination__container, .table-emb__container {
+    margin: 0 -15px;
+  }
+  .table-emb thead > :first-child, .table-emb tr > :first-child {
+    padding-left: 6px;
+  }
+  .table-emb thead > :last-child, .table-emb tr > :last-child {
+    padding-right: 6px;
+  }
+}

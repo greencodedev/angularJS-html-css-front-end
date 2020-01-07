@@ -1,0 +1,227 @@
+<div class="modal-content">
+  <div class="modal-header modal-header--emb">
+    <h5 class="modal-title">Convert item</h5>
+    <button type="button" class="modal-close close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div *ngIf="status == 'converted'">
+      <div class="col-12 text-center pt-5 pb-5">
+        <img src="./assets/images/check.png" width="90px"/>
+      </div>
+    </div>
+
+    <div *ngIf="status != 'converted'" class="row modal-body_row">
+      <div class="col-sm-6 modal-body_header-container">
+        <div class="modal-body_exchange">
+          <img alt="change" class="modal-body_exchange-icon" src="/assets/images/stock-exchange-icon.png">
+        </div>
+        <div class="modal-body_header">SOURCE</div>
+        <div class="modal-body_section row modal-body_section--top">
+          <div class="col-sm-3">
+            <div class="modal-body_title">Item</div>
+            <div class="modal-body_text">#{{ product.FinaleId }}</div>
+          </div>
+          <div class="col-sm-9">
+            <div class="modal-body_title">Item Name</div>
+            <div class="modal-body_text">{{ product.Name }}</div>
+          </div>
+        </div>
+        <div class="modal-body_section row">
+          <div class="col-sm-12">
+            <div class="modal-body_title">Source Condition</div>
+            <div class="modal-body_text">{{ product.Condition?.Name }}</div>
+          </div>
+        </div>
+        <div class="modal-body_section modal-body_section--large row sublocation">
+          <div class="col-sm-12">
+            <label for="sourceLocation" class="modal-body_title">Source location</label>
+            <div class="modal-body_text">
+              <div [hidden]="!loading" class="ldr-overlay">
+                <div class="lds-ripple">
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+              <select name="fromSublocation" [(ngModel)]="conversion.FromSublocation.SublocationId" class="form-control"
+                      id="sourceLocation"
+                      aria-describedby="sourceLocation">
+                <option *ngIf="!conversion.FromSublocation.SublocationId || conversion.FromSublocation.SublocationId == 0" value="0">Select location</option>
+                <option [disabled]="sublocation.Stock < 1 || sublocation.Stock < conversion.Quantity"
+                        *ngFor="let sublocation of sublocations"
+                        value="{{sublocation.SublocationId}}">{{ sublocation.Name }} (<span class="stock">{{ sublocation.Stock }} available)</span></option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body_section row">
+          <div class="col-sm-6">
+            <label for="po" class="modal-body_title">Po#</label>
+            <div class="modal-body_text">
+              <input name="poNumber" type="text"
+                     class="form-control"
+                     id="po"
+                     aria-describedby="po"
+                     placeholder="Enter Po"
+                     [(ngModel)]="conversion.PoNumber">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="modal-body_title" for="qty">Quantity</label>
+            <div class="modal-body_text">
+              <input name="quantity"
+                     type="text" class="form-control"
+                     id="qty" aria-describedby="quantity"
+                     [(ngModel)]="conversion.Quantity">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 modal-body_header-container">
+        <div class="modal-body_header">DESTINATION</div>
+
+        <div *ngIf="errorMessage" class="modal-body_error modal-body_section row">
+          <div class="col-sm-12">
+            <div class="modal-body_error-msg">{{errorMessage}}</div>
+            <div class="modal-body_error-ids">
+              <div *ngFor="let id of errorItems" class="modal-body_error-id">#{{id}}</div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!errorMessage" class="modal-body_section row modal-body_section--top">
+          <div class="col-sm-3">
+            <ng-container *ngIf="conversion.CreateNewProduct">
+              <div class="modal-body_new">New Item</div>
+            </ng-container>
+            <ng-container *ngIf="!conversion.CreateNewProduct">
+              <div class="modal-body_title">Item</div>
+              <div class="modal-body_text" *ngIf="conversion.ToProduct.FinaleId">#{{ conversion.ToProduct.FinaleId }}</div>
+            </ng-container>
+          </div>
+          <div class="col-sm-9">
+            <div class="modal-body_title">Item Name</div>
+            <div class="modal-body_text" *ngIf="conversion.CreateNewProduct">{{ getProdName(conversion.FromProduct.Name)[0] }} ({{ selectedCondition.Code }}) </div>
+            <div [ngClass]="toFromMatch ? 'success' : 'warning'" class="modal-body_text dest-prod" *ngIf="selectedCondition.ConditionId != product.Condition.ConditionId && !conversion.CreateNewProduct && conversion.ToProduct.FinaleId != null" [popover]="toFromMatch ? 'The destination name is the same as the source' : 'The destination name is not exactly the same as the source.'" [popoverTitle]="toFromMatch ? 'Awesome!' : 'Please Verify'" triggers="mouseenter:mouseleave">{{ conversion.ToProduct.Name }}</div>
+            <div class="modal-body_text dest-prod" *ngIf="selectedCondition.ConditionId == product.Condition.ConditionId" [popover]="'Same as source.'" [popoverTitle]="'Please Verify'" triggers="mouseenter:mouseleave">{{ conversion.ToProduct.Name }}</div>
+          </div>
+        </div>
+        <!-- <div class="modal-body_section row" *ngIf="User.Roles?.includes('Admin')">
+          <div class="col-sm-12">
+            <label class="checkbox_container">Change product
+              <input
+                name="changeProduct"
+                [(ngModel)]="changeProduct"
+                type="checkbox">
+              <span class="checkbox_checkmark"></span>
+            </label>
+          </div>
+        </div> -->
+        <div class="modal-body_section row">
+          <!-- <div *ngIf="!changeProduct" class="col-sm-12"> -->
+          <div class="col-sm-12">
+            <p [hidden]="!convertPlus" [tooltipHtml]="condProdTemp" triggers="click" #pop="bs-tooltip" containerClass="dest-cond" for="destinationConditions" class="modal-body_title down-arrow">Destination {{ conversion.ConvertType | titlecase }}</p>
+            <p *ngIf="!convertPlus" class="modal-body_title">Destination Condition</p>            
+            <ng-template #condProdTemp>
+              <label class="checkbox_container">
+                  Condition
+                  <input (change)="pop.hide(); convertTypeChanged()" [(ngModel)]="conversion.ConvertType" type="radio" name="condprod" value="condition">
+                  <span class="checkbox_checkmark"></span>
+              </label>
+              <label class="checkbox_container">
+                  Item
+                  <input (change)="pop.hide(); convertTypeChanged()" [(ngModel)]="conversion.ConvertType" type="radio" name="condprod" value="item">
+                  <span class="checkbox_checkmark"></span>
+              </label>
+            </ng-template>
+            <div class="modal-body_text">
+              <div [hidden]="!condLoading" class="ldr-overlay">
+                <div class="lds-ripple">
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+              <select *ngIf="conversion.ConvertType == 'condition'" name="toProduct" [(ngModel)]="seelctedConditionId" class="form-control"
+                      id="destinationConditions"
+                      (change)="conditionChanged()"
+                      aria-describedby="destinationConditions">
+                <option *ngIf="!seelctedConditionId || seelctedConditionId == 0" value="0">Select Condition</option>
+                <option *ngFor="let condition of conditions" value="{{condition.ConditionId}}">{{ condition.Name }}
+                  <span *ngIf="condition.ConditionId == product.Condition.ConditionId"> (current)</span></option>
+              </select>
+              
+              <div *ngIf="conversion.ConvertType == 'item' && convertPlus" class="input-search">
+                <input [(ngModel)]="productSelected"
+                        [typeahead]="productsDataSource"
+                        typeaheadOptionField="Name"
+                        [typeaheadItemTemplate]="customCapTemplate"
+                        (typeaheadOnSelect)="selectProduct($event)"
+                        [typeaheadAsync]="true"
+                        (change)="productChanged()"
+                        placeholder="Item"
+                        class="dest-item-search btn-tp-select btn-block might-overflow">
+              </div>
+              <ng-template #customCapTemplate let-model="item" let-index="index" let-query="query">
+                <span>{{model.FinaleId}} - {{model.Name}}</span>
+             </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body_section modal-body_section--large row">
+          <div class="col-sm-12">
+            <label class="checkbox_container" title="{{destSublocations.length == 0 ? 'Access to this feature/function is not granted.' : ''}}">Change location
+              <input
+                name="changeLocation"
+                [(ngModel)]="transfer"
+                (change)="transferChanged()"
+                type="checkbox"
+                [disabled]="destSublocations.length == 0">
+              <span class="checkbox_checkmark"></span>
+            </label>
+            <label for="transferLocation" class="modal-body_title" [class.modal-body_title--disabled]="!transfer">
+              Transfer location
+            </label>
+            <div class="modal-body_text">
+              <select name="toSublocation" [(ngModel)]="conversion.ToSublocation.SublocationId" class="form-control"
+                      id="transferLocation"
+                      aria-describedby="transferLocation"
+
+                      [attr.disabled]="!transfer ? '' : null">
+                <option *ngIf="!conversion.ToSublocation.SublocationId || conversion.ToSublocation.SublocationId == 0" value="0">Select location</option>
+                <option *ngFor="let sublocation of destSublocations"
+                        value="{{sublocation.SublocationId}}">{{ sublocation.Name }}<span
+                  *ngIf="!conversion.CreateNewProduct && conversion.CreateNewProduct != null"
+                  class="stock"> ({{ sublocation.Stock }} available)</span></option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section *ngIf="status != 'converted'" class="row row-item pt-4 pb-4 d-flex notes-container">
+      <label class="modal-body_title">
+        NOTES:
+      </label>
+      <textarea [(ngModel)]="conversion.Note" class="form-control notes-input" rows="3"></textarea>
+    </section>
+      <section class="row row-item pt-4 pb-4 buttons-container">
+      <button class="button button--cancel" *ngIf="status == 'ready'" data-dismiss="modal" aria-label="Close"
+              (click)="modalRef.hide()">Cancel
+      </button>
+      <button class="button button--success" *ngIf="status != 'converted'"
+              [class.button--disabled]="status == 'converting' || conversion.Quantity <= 0 || (conversion.ConvertType == 'condition' && selectedCondition.ConditionId == null) || (conversion.ConvertType == 'item' && conversion.ToProduct.ProductId == null) || !conversion.FromSublocation.SublocationId || conversion.FromSublocation.SublocationId == 0 || errorMessage"
+              (click)="convert()">
+        <span *ngIf="status == 'ready'">Convert</span>
+        <span *ngIf="status == 'converting'">Converting...</span>
+      </button>
+      <button type="button" class="button" *ngIf="status == 'converted'" (click)="done(true)">
+        <span>Print Labels</span>
+      </button>
+      <button class="button button--success" *ngIf="status == 'converted'" (click)="done(false)">
+        Close
+      </button>
+    </section>
+  </div>
+</div>

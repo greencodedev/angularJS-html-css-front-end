@@ -1,0 +1,18 @@
+﻿CREATE TABLE `AverageCostLog` (
+   `TransactionId` int(11) NOT NULL AUTO_INCREMENT,
+   `FinalId` varchar(255) NOT NULL,
+   `TransactionType` varchar(255) DEFAULT NULL,
+   `Quantity` int(11) DEFAULT NULL,
+   `CostPerUnit` decimal(12,2) DEFAULT NULL,
+   `CurrentStock` int(11) NOT NULL,
+   `NewAverageCost` decimal(12,2) NOT NULL,
+   `InsertedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   PRIMARY KEY (`TransactionId`)
+ );
+
+ alter table AverageCostLog add column TransactionDescription varchar(255) after TransactionType not null
+
+ alter table AverageCostLog add column ReceivedDate datetime after TransactionDescription;
+
+
+alter table AverageCostLog add column CurrAvgCost decimal(12, 2) after ReceivedDate;

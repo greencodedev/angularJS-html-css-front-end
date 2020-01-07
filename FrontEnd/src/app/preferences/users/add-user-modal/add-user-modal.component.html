@@ -1,0 +1,233 @@
+<form *ngIf="!printersListShown" (ngSubmit)="save(user)">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">User Profile</h4>
+    <button type="button" class="modal-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body1">
+    <div>
+      <div class="tabset">
+        <label [class.selected]="selectedTab == 'user'">
+          <input name="tab" type="radio" value="user" [(ngModel)]="selectedTab">
+          User Information
+        </label>
+        <label [class.selected]="selectedTab == 'convert'">
+          <input name="tab" type="radio" value="convert" [(ngModel)]="selectedTab">
+          Convert Settings
+        </label>
+        <label [class.selected]="selectedTab == 'printer'">
+          <input name="tab" type="radio" value="printer" [(ngModel)]="selectedTab">
+          Printers
+        </label>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="modal-body modal-body1">
+    <div class="modal-body_row">
+      <h4 class="modal-body_title">Assign user role</h4>
+      <div class="btn-group">
+        <button class="button button--success button-role"
+              *ngIf="user.IsSuperAdmin"
+                type="button"
+                [class.button--active]="Roles.includes('Admin')">
+          Super Admin
+        </button>
+        <button class="button button--success button-role"
+               *ngIf="!user.IsSuperAdmin"
+                type="button"
+                [class.button--active]="Roles.includes('Admin')"
+                (click)="setUserRole('Admin')">
+          Admin
+        </button>
+        <button class="button button--success button-role"
+                type="button"
+                (click)="setUserRole('Converter')"
+                [class.button--active]="Roles.includes('Converter')">
+          Converter
+        </button>
+        <button class="button button--success button-role button--select"
+                type="button" 
+                (click)="showPrintersList()"
+                [class.button--active]="Roles.includes('Printer') && hasAnyPrinter">
+          Printer
+        </button>
+      </div>
+    </div>
+  </div> -->
+  <div class="modal-body main-body">
+    <div class="modal-body-user" *ngIf="selectedTab == 'user'">
+      <div  class="input-toggle_wrap">
+        <label class="input-toggle" for="isAdmin">
+          <input type="checkbox" class="input-toggle_input" name="isAdmin" id="isAdmin"
+                  [ngModel]="user.IsAdmin" (change)="setUserRole('Admin')">
+          <span class="input-toggle_slider"></span>
+        </label>
+        <span class="input-toggle_label">{{user.IsAdmin ? 'Admin' : 'Not Admin'}}</span>
+      </div>
+
+      <div class="input-wrapper d-flex">
+        <div class="input_container">
+          <label for="firstName" class="input_label">First Name</label>
+          <input id="firstName" type="text" name="firstName" [(ngModel)]="user.FirstName" class="input"/>
+        </div>
+        <div class="input_container">
+          <label for="secondName" class="input_label">Last Name</label>
+          <input id="secondName" type="text" name="secondName" [(ngModel)]="user.LastName" class="input"/>
+        </div>
+        <div class="input_container">
+          <label for="email" class="input_label">Email Address</label>
+          <input id="email" type="text" name="email" [(ngModel)]="user.Email" class="input"/>
+        </div>
+        <div class="input_container input_container--small">
+          <label for="initials" class="input_label">Initials</label>
+          <input id="initials" type="text" name="initials" [(ngModel)]="user.Initials" class="input"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body-convert" *ngIf="selectedTab == 'convert'">
+      <div class="btn-group d-flex">
+        <span>Convert Options: </span>
+        <button class="button button--success button-role"
+                type="button"
+                (click)="removerUserRoles(['Converter', 'ConvertPlus'])"
+                [class.button--active]="!Roles.includes('Converter') && !Roles.includes('ConvertPlus')">
+          None
+        </button>
+        <button class="button button--success button-role"
+                type="button"
+                [class.button--active]="Roles.includes('Converter')"
+                (click)="setUserRole('Converter')">
+          Converter
+        </button>
+        <button class="button button--success button-role"
+                type="button"
+                (click)="setUserRole('ConvertPlus')"
+                [class.button--active]="Roles.includes('ConvertPlus')">
+          Convert Plus
+        </button>
+      </div>
+
+      <div [hidden]="!loading" class="ldr-overlay">
+        <div class="lds-ripple">
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+
+      <table class="table table-emb locations" *ngIf="activeConvert == 'locations'">
+        <thead>
+          <th class="name">
+            <span class="active">Location</span>
+            <span (click)="activeConvert = 'conditions'">Condition</span>
+          </th>
+          <th class="text-right">Convertible From</th>
+          <th class="text-right">Convertible To</th>
+        </thead>
+        <tr *ngFor="let location of user.Sublocations">
+          <ng-container *ngIf="location.ParentLocation != null">
+            <td class="align-middle">{{location.Name}} : {{location.ParentLocation?.Name}}</td>
+            <td class="align-middle text-right">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin" title="{{!location.ConvertibleFrom ? 'This is disabled at the general location list' : ''}}">
+                    <input [name]="'convertibleTo'+location.Name" [disabled]="!location.ConvertibleFrom"  [(ngModel)]="location.UserConvertibleFrom" type="checkbox">
+                    <span class="slider round" [ngClass]="{locDisabled: !location.ConvertibleFrom}"></span>
+                  </label>
+                </div>
+                
+                <div class="switch__value">{{location.UserConvertibleFrom ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+            <td class="align-middle text-right">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin" title="{{!location.ConvertibleTo ? 'This is disabled at the general location list' : ''}}">
+                    <input [name]="'convertibleFrom'+location.Name" [disabled]="!location.ConvertibleTo" [(ngModel)]="location.UserConvertibleTo" type="checkbox">
+                    <span class="slider round" [ngClass]="{locDisabled: !location.ConvertibleTo}"></span>
+                  </label>
+                </div>
+                
+                <div class="switch__value">{{location.UserConvertibleTo ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </table>
+      <table class="table table-emb conditions" *ngIf="activeConvert == 'conditions'">
+        <thead>
+          <th class="name">
+            <span (click)="activeConvert = 'locations'">Location</span>
+            <span class="active">Condition</span>
+          </th>
+          <th class="text-right">Code</th>
+          <th class="text-right">Convertible From</th>
+          <th class="text-right">Convertible To</th>
+        </thead>
+        <tr *ngFor="let condition of user.Conditions">
+            <td class="align-middle">{{condition.Name}}</td>
+            <td *ngIf="condition.Code" class="align-middle">({{condition.Code}})</td>
+            <td *ngIf="!condition.Code" class="align-middle"></td>
+            <td class="align-middle">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin">
+                    <input [name]="'convertibleFrom'+condition.Code"  [(ngModel)]="condition.UserConvertibleFrom" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="switch__value">{{condition.UserConvertibleFrom ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+            <td class="align-middle">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin">
+                    <input [name]="'convertibleTo'+condition.Code"  [(ngModel)]="condition.UserConvertibleTo" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="switch__value">{{condition.UserConvertibleTo ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+          </tr>
+      </table>
+    </div>
+
+
+    <div class="modal-body-user" *ngIf="selectedTab == 'printer'">
+      <form>
+          <div class="modal-body_row">
+          <div class="printers_checkbox-container printers_checkbox-container--absolute">
+            <input id="printer-all"
+                    [(ngModel)]="isAllPrintersChecked"
+                    class="printers_checkbox"
+                    name="printer-all"
+                    type="checkbox"
+                    (change)="selectAll(isAllPrintersChecked)">
+          </div>
+          <h2 class="modal-body_subtitle text-align-left">All Printers</h2>
+        </div>
+        <div class="printers_container">
+          <div class="printers_inner">
+            <div class="printers_printer" *ngFor="let printer of user.Printers; let i = index">
+              <div class="printers_checkbox-container">
+                <input id="printer-{{i}}" class="printers_checkbox" name="printer-{{i}}" type="checkbox" [(ngModel)]="printer.IsAssigned" (change)="printerSelected()">
+                <label for="printer-{{i}}" class="printers_label">{{printer.CustomName || printer.Name}}</label>
+              </div>
+              <img class="printers_info" *ngIf="printer.Description" [tooltip]="printer.Description" src="/assets/images/info.svg">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+    
+  <div class="modal-footer">
+    <button type="submit" class="button button--success">
+      Save
+    </button>
+  </div>
+</form>

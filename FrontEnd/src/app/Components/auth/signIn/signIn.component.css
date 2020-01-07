@@ -1,0 +1,23 @@
+.page {
+  background: #fff;
+}
+
+.loading:after {
+    content: url('~/assets/images/rotate.png');
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 18px;
+    height: 22px;
+    width: 22px;
+    -webkit-animation: rotation 2s infinite linear;
+  }
+   
+  @-webkit-keyframes rotation {
+    from {
+    -webkit-transform: rotate(0deg);
+    }
+    to {
+    -webkit-transform: rotate(359deg);
+    }
+  }
+    

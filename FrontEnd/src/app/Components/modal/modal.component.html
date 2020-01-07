@@ -1,0 +1,61 @@
+<div class="modal-content">
+  <div class="modal-header modal-header--emb">
+    <h5 class="modal-title">Print Labels</h5>
+    <button type="button" class="modal-close close" data-dismiss="modal" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body--emb">
+    <div class="row" *ngIf="sentToPrint">
+      <div class="col-12 text-center pt-5">
+        <img src="./assets/images/check.png" width="90px"/>
+      </div>
+    </div>
+    <div class="row" *ngIf="!sentToPrint" [class.form-disabled]="isPrinting">
+      <div class="col-12 text-center pb-5">
+        <p><strong> {{ product.Name }} </strong></p>
+      </div>
+      <div class="col-12 col-md-8">
+        <div class="form-group">
+          <label for="printer" class="label-emb">Select Printer</label>
+          <div class="emb-list-of-printers">
+            <input type="text"
+                   class="form-control w-100 emb-list-of-printers__input"
+                   id="printer"
+                   placeholder="Select Printer"
+                   readonly="readonly"
+                   [class.emb-list-of-printers__input--with-list]="listOpened"
+                   [(value)]="selectedPrinterDisplay"
+                   (focus)="switchList()"
+                   (focusout)="switchList()"
+                   >
+            <div class="emb-list-of-printers__arrow"></div>
+            <div class="emb-list-of-printers__container" *ngIf="listOpened">
+              <div class="emb-list-of-printers__list">
+                <ul class="list-unstyled" >
+                  <li *ngFor="let printer of getPrinters()" (mousedown)="selectPrinter(printer)">
+                    <div class="emb-list-of-printers__printer-name"> {{ printer.CustomName || printer.Name }} </div>
+                    <div *ngIf="printer.Size && printer.Size.Name" class="emb-list-of-printers__printer-type"><div class="d-block text-center">( {{ printer.Size.Name }} )</div></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="form-group">
+          <label for="quantity" class="label-emb">Print Quantity</label>
+          <input type="number" min="1" class="form-control input-emb" id="quantity" placeholder="Print Quantity" [(ngModel)]="quantity">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer modal-footer--emb justify-content-center">
+    <button type="button" class="btn btn-modal-print" *ngIf="sentToPrint" (click)="modalRef.hide()">Done</button>
+    <button type="button" class="btn btn-modal-print" *ngIf="!sentToPrint" (click)="print()" [class.button--disabled]="isPrinting">
+      <span *ngIf="!isPrinting">Print</span>
+      <span *ngIf="isPrinting">Printing...</span>
+    </button>
+  </div>
+</div>

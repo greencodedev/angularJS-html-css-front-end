@@ -1,0 +1,39 @@
+<form (ngSubmit)="save(condition)">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Edit condition info</h4>
+    <button type="button" class="modal-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-body1">
+    <div class="modal-body_row">
+      <h4 class="modal-body_title">Condition: &nbsp; <strong>{{condition.Name}}</strong></h4>
+      <div class="input-toggle_wrap">
+        <label class="input-toggle" for="isActive">
+          <span class="input-toggle_title">Convertible</span>
+          <input type="checkbox" class="input-toggle_input" name="isActive" id="isActive"
+                 [(ngModel)]="condition.Convertible">
+          <span class="input-toggle_slider"></span>
+        </label>
+        <span class="input-toggle_label"><strong>{{condition.Convertible ? 'Yes' : 'No'}}</strong></span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-body modal-body2" >
+    <div class="modal-body_title">Description</div>
+    <input type="text" class="input" name="description" [(ngModel)]="condition.Description">
+
+    <div class="modal-body_title">
+        Code <br/>
+        <sub>Enter code without (parentheses)</sub>
+    </div>
+    
+    <input type="text" class="input" name="code" [(ngModel)]="condition.Code">
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="button button--success">
+      Update
+    </button>
+  </div>
+</form>

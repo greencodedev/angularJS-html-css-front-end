@@ -1,0 +1,150 @@
+<app-preferences-navigation navigationType="products"></app-preferences-navigation>
+
+<div class="form-row align-items-center print-log-top">
+  <div class="col-12 col-md-5 col-lg-3 py-2">
+    <div class="input-search">
+      <input type="text" placeholder="Search" [(ngModel)]="Criteria.TextSearch" (ngModelChange)="Criteria.Page = 1;getLogs()">
+    </div>
+  </div>
+  <div class="filter-set d-flex col-12 col-md-7 col-lg-5 py-2">
+
+    <div class="col-5 py-2">
+        <div class="btn-group w-100" dropdown>
+            <div class="input-search">
+                <input [(ngModel)]="productSelected"
+                       [typeahead]="productsDataSource"
+                       typeaheadOptionField="Name"
+                       (typeaheadOnSelect)="selectProduct($event)"
+                       [typeaheadAsync]="true"
+                       (change)="productChanged()"
+                       placeholder="Product"
+                       class="btn-tp-select btn-block might-overflow">
+              </div>
+        </div>
+      </div>
+    <div class="col-4 py-2">
+      <div class="btn-group w-100" dropdown>
+        <button id="select-status" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                aria-controls="dropdown-status"> {{Criteria.TnxType || 'Tnx Type'}}<span class="caret"></span>
+        </button>
+        <ul id="dropdown-status" *dropdownMenu class="dropdown-menu"
+            role="menu" aria-labelledby="select-status">
+            <li class="dropdown-item" (click)="Criteria.TnxType = null;Criteria.Page = 1; getLogs()">All</li>
+          <li role="menuitem"><span class="dropdown-item" (click)="Criteria.TnxType = 'Purchase shipment'; Criteria.Page = 1; getLogs()">Purchase shipment</span></li>
+          <li role="menuitem"><span class="dropdown-item" (click)="Criteria.TnxType = 'Convert';Criteria.Page = 1; getLogs()">Convert</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-5 py-2">
+        <div class="btn-group w-100 input-search input-datepicker" dropdown>
+          <input placeholder="Date Range" type="text" ngxDaterangepickerMd showClearButton="true" (change)="selectDate()" [(ngModel)]="selectedDate" class="form-control">
+        </div>
+      </div>
+  </div>
+  <div class="input-search input-datepicker col-6 col-lg-2">
+  </div>
+  <div class="col-6 col-md-2 col-lg-2 py-2 text-right">
+      <button (click)="exportLog()" class="button button--success export-btn">Export</button>
+  </div>
+</div>
+
+
+<div class="table-emb__container">
+  <table class="table table-emb">
+    <thead>
+      <th (click)="SortBy('FinalId')" class="pointer">Product Id
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'FinalId' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'FinalId'">
+      </th>
+      <th class="pointer">
+        Type
+      </th>
+      <th class="pointer">
+        Description
+      </th>
+      <th class="pointer">
+        Curr Average Cost
+      </th>
+      <th class="pointer">
+        Curr QOH
+      </th>
+      <th class="pointer">
+        Tnx Quantity
+      </th>
+      <th class="pointer">
+        Tnx Cost Per Unit
+      </th>
+      <th class="pointer">
+        New QOH
+      </th>
+      <th class="pointer">
+        Average Cost
+      </th>
+      <th (click)="SortBy('ReceivedDate')" class="pointer">Time
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'ReceivedDate' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'ReceivedDate'">
+      </th>
+    </thead>
+    <tr *ngFor="let log of logs">
+      <!-- <td class="align-middle" title="{{ log.user.FirstName }} {{ log.user.LastName }}"> <div class="circled">{{ log.user.FirstName[0] | uppercase }}{{ log.user.LastName[0] | uppercase }}</div></td> -->
+      <td class="align-middle" title="{{ log.FinalProductId }}"> {{ log.FinalProductId }}</td>
+      <td class="align-middle"> {{ log.TransactionType }}</td>
+      <td class="align-middle"> {{ log.TransactionDescription }}</td>
+      <td class="align-middle"> {{ log.CurrAvgCost | currency  }}</td>
+      <td class="align-middle"> {{ log.CurrentStock - log.Quantity }}</td>
+      <td class="align-middle"> {{ log.Quantity }}</td>
+      <td class="align-middle"> {{ log.CostPerUnit  | currency}}</td>
+      <td class="align-middle"> {{ log.CurrentStock }}</td>
+      <td class="align-middle"> {{ log.NewAverageCost  | currency}}</td>
+      <td class="align-middle"> {{ log.ReceivedDate | date:'M/dd/yy h:mm a' }}</td>
+    </tr>
+  </table>
+  <div [hidden]="!loading" class="ldr-overlay">
+    <div class="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+<div class="emb-pagination__container">
+  <div class="row mx-0">
+    <div class="emb-pagination">
+      <div class="row mx-0">
+        <div class="col-6 col-md-3">
+          <div class="btn-group" dropdown [dropup]="true">
+            <button id="button-dropup" dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                    aria-controls="dropdown-dropup">
+              {{ Criteria.Limit }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-dropup">
+              <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item" (click)="setPcsOnpage(pcs)"> {{ pcs }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+          <pagination [totalItems]="TotalCount"
+                        [(ngModel)]="Criteria.Page"
+                        [(itemsPerPage)]="Criteria.Limit"
+                        (pageChanged)="paginate($event)"
+                        [maxSize]="8"
+                        previousText="&lsaquo;  Back"
+                        nextText="Next  &rsaquo;"
+                        class="mb-0">
+          </pagination>
+        </div>
+        <div class="col-6 col-md-3 text-right">
+          <div class="btn-group">
+            <button id="button-dropup" type="button" class="btn btn-emb-gray ml-5"
+                    aria-controls="">
+                    TotalCount:
+              {{ TotalCount }}
+                   <span class="caret"></span>
+            </button>
+           </div>
+        </div>
+        <div class="col-3"></div>
+      </div>
+    </div>
+  </div>
+</div>

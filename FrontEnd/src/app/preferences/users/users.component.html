@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="row emb-top-panel">
+    <div class="col-12">
+      <div class="preferences_header justify-content-end">
+          <div  class="input-toggle_wrap ml-auto">
+              <label class="input-toggle" for="allActive">
+                <input (change)="getUsers()" type="checkbox" class="input-toggle_input" name="allActive" id="allActive"
+                        [(ngModel)]="search.Status">
+                <span class="input-toggle_slider"></span>
+              </label>
+              <span class="input-toggle_label">{{search.Status ? 'Only Active' : 'All'}}</span>
+            </div>
+        <button class="button button--success" (click)="invokeAddUserModal()">Add User</button>
+      </div>
+
+      <div class="table-emb__container">
+        <table class="table table-emb">
+          <thead>
+          <th>Initials</th>
+          <th>Email</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Status</th>
+          <th class="user-roles_container">User Roles</th>
+          <th></th>
+          </thead>
+          <tr *ngFor="let user of Users">
+            <td class="align-middle"> <div class="circled">{{ user.Initials }}</div></td>
+            <td class="align-middle"> <div class="table-emb__email">{{ user.Email }}</div></td>
+            <td class="align-middle"> {{ user.FirstName || ''}}</td>
+            <td class="align-middle"> {{ user.LastName || '' }}</td>
+            <td class="align-middle">
+              <div class="text-center">
+                <div class="switch__container">
+                  <label class="switch">
+                    <input name="transfer" [(ngModel)]="user.Active" (change)="ToggleUserActivation(user)" type="checkbox">
+                    <span class="slider round"></span>
+                    </label>
+                    <div class="switch__value" (click)="ToggleUserActivation(user)">{{user.Active ? 'Active' : 'Inactive'}}</div>
+                  </div>
+                </div>
+            </td>
+
+            <td class="align-middle text-right user-roles_container">
+              <div class="btn-group user-roles">
+                <!-- <div class="role-wrap" *ngFor="let role of user.Roles"> -->
+                  <div class="role-wrap"><button *ngIf="user.Roles.includes('Admin')" class="button button--disabled table-emb__button-like">{{user.IsSuperAdmin ? 'Super Admin' : 'Admin'}}</button></div>
+                  <div class="role-wrap"><button *ngIf="user.Roles.includes('Converter')" class="button button--disabled table-emb__button-like">Converter</button></div>
+                  <div class="role-wrap"><button *ngIf="user.Roles.includes('Printer')" class="button button--disabled table-emb__button-like">Printer</button></div>
+                <!-- </div> -->
+              </div>
+            </td>
+            <td class="align-middle narrow">
+              <div class="btn-group" dropdown>
+                <button id="more-{{i}}"
+                        dropdownToggle
+                        type="button"
+                        class="button-more"
+                        aria-controls="dropdown-basic">
+                  ...
+                </button>
+                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-basic">
+                  <li role="menuitem"><span class="dropdown-item" (click)="invokeAddUserModal(user)">Edit</span></li>
+                  <li role="menuitem"><span class="dropdown-item" (click)="SelectUser(user)">Reset Password</span></li>
+                  <li *ngIf="user.Active && !user.IsAdmin" role="menuitem"><span class="dropdown-item" (click)="UpdateUser(user, false)" [hidden]="user.IsAdmin">Deactivate</span></li>
+                  <li *ngIf="!user.Active && !user.IsAdmin" role="menuitem"><span class="dropdown-item" (click)="UpdateUser(user, true)" [hidden]="user.IsAdmin">Activate</span></li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div [hidden]="!loading" class="ldr-overlay">
+          <div class="lds-ripple">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="emb-pagination__container">
+        <div class="row mx-0">
+          <div class="emb-pagination">
+            <div class="row mx-0">
+              <div class="col-6 col-md-3">
+                <div class="btn-group" dropdown [dropup]="true">
+                  <button id="button-dropup" dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                          aria-controls="dropdown-dropup">
+                    {{ itemsPerPage }} <span class="caret"></span>
+                  </button>
+                  <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                      role="menu" aria-labelledby="button-dropup">
+                    <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item"
+                                                                              (click)="setPcsOnpage(pcs)"> {{ pcs }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                <pagination [totalItems]="users.length"
+                            [(ngModel)]="currentPage"
+                            [(itemsPerPage)]="itemsPerPage"
+                            (pageChanged)="pageChanged($event)"
+                            previousText="&lsaquo;  Back"
+                            nextText="Next  &rsaquo;"
+                            class="mb-0">
+                </pagination>
+              </div>
+              <div class="col-3"></div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+</div>

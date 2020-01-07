@@ -1,0 +1,47 @@
+<header class="bg-blue header">
+  <div class="hamburger"
+       *ngIf="isHamburgerShown$ | async"
+       [class.hamburger--open]="isSidebarOpened$ | async"
+       (click)="toggleSidebar()">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <div class="container"
+       [class.container--sidebar]="isSidebarOpened$ | async"
+       [class.container--hamburger]="isHamburgerShown$ | async">
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <a routerLink="/">
+          <img class="header-logo" src="./assets/images/logo-white.png"/>
+        </a>
+      </div>
+      <div class="col-12 col-md-6 d-flex justify-content-end align-items-center">
+        <span class="profile-link" dropdown  container="body">
+          <img src="./assets/images/person.png" dropdownToggle  class="dropdown-toggle"/>
+
+          <ul *dropdownMenu class="dropdown-menu" role="menu">
+              <li role="menuitem"><a class="dropdown-item" (click)="LogOut()">Logout</a></li>
+             
+            </ul>
+
+          <span [hidden]="!User.FirstName">{{User.FirstName }} {{User.LastName}}</span>
+        </span>
+        <a *ngIf="User.IsAdmin" routerLink="/preferences">
+          <img src="./assets/images/gear.png"/>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- <div role="" dropdown triggers="mouseover" placement="right" container="body">
+    <a  class=""
+       (click)="false">Hover me for nested dropdown</a>
+    <ul *dropdownMenu class="dropdown-menu" role="menu">
+      <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action</a></li>
+      <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action1</a></li>
+      <li role="menuitem"><a class="dropdown-item" href="#/dropdowns#nested">Action2</a></li>
+    </ul>
+  </div> -->

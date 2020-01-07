@@ -1,0 +1,48 @@
+<form (ngSubmit)="save(printer)">
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Printer Setup</h4>
+    <button type="button" class="modal-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="modal-body_row">
+      <h4 class="modal-body_title">Default Printer Name</h4>
+      <div  class="input-toggle_wrap">
+        <label [attr.title]="(printer.CustomName == '' || printer.CustomName == null) && !printer.Active? 'Please add a custom name before enabling' :''" class="input-toggle" for="isActive">
+          <input type="checkbox" class="input-toggle_input" name="isActive" id="isActive"
+                 [(ngModel)]="printer.Active">
+          <span class="input-toggle_slider"></span>
+        </label>
+        <span class="input-toggle_label">{{printer.Active ? 'Active' : 'Inactive'}}</span>
+      </div>
+    </div>
+    <div class="modal-body_row">
+      <b>ID: {{printer.Id}}</b>
+    </div>
+    <div class="modal-body_row">
+      <b>Name: {{printer.Name}}</b>
+    </div>
+  </div>
+  <div class="modal-body modal-body2" >
+    <div class="modal-body_title">Customized printer name</div>
+    <input type="text" class="input" name="custom name" [(ngModel)]="printer.CustomName">
+    <div class="modal-body_title">Label Size</div>
+    <div class="printer-sizes">
+      <ng-container *ngFor="let size of sizes">
+        <button *ngIf="!size.Name.includes('Convert')" 
+          class="button printer-size"
+          type="button"
+          [class.button--success]="printer.Size.Name === size.Name"
+          (click)="printer.Size = size">
+          <span>{{size.Name}}</span>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="button button--success">
+      Save
+    </button>
+  </div>
+</form>

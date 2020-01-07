@@ -1,0 +1,62 @@
+.printer-settings {
+  padding: 21px 0;
+  position: relative;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.printer-sizes {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.printer-size {
+  display: flex;
+  flex-direction: column;
+  background: #0a55a1;
+  color: white;
+  text-align: center;
+  align-items: center;
+  min-width: 110px;
+  border-radius: 7px;
+  width: 22%;
+  line-height: 2.4;
+  border: 1px solid transparent;
+  box-shadow: 1px 1px 11px rgba(0, 0, 0, 0.25);
+  font-weight: 500;
+  padding: 1rem;
+}
+
+.button--selected {
+  background: transparent;
+  border-color: #0a55a1;
+  color: #0a55a1;
+}
+
+.zpl-code {
+  border-radius: 13px;
+  padding: 10px 16px;
+  width: 100%;
+  border: 0;
+  height: 320px;
+  resize: none;
+}
+
+.printer-settings_footer {
+  text-align: center;
+}
+
+.printer-settings_footer {
+  padding: 20px 0;
+}
+
+.printer-settings_title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #444;
+}

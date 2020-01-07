@@ -1,0 +1,24 @@
+<app-preferences-navigation navigationType="printers"></app-preferences-navigation>
+<div class="printer-settings">
+  <div [hidden]="!loading" class="ldr-overlay">
+    <div class="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <h4 class="printer-settings_title">Label Size Options</h4>
+  <div class="printer-sizes">
+    <button *ngFor="let size of sizes index as i"
+            class="button printer-size"
+            [class.button--selected]="selectedIndex === i"
+            (click)="selectedIndex = i">
+      <span>{{size.Name}}</span>
+      <span>{{size.Label}}</span>
+    </button>
+  </div>
+  <h4 class="printer-settings_title">{{sizes[selectedIndex]['Name']}} ZPL Code</h4>
+  <textarea [(ngModel)]="sizes[selectedIndex]['Zpl']" class="zpl-code"></textarea>
+  <div class="printer-settings_footer">
+    <button class="button button--success" (click)="save()">Save</button>
+  </div>
+</div>

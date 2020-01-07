@@ -1,0 +1,4 @@
+<app-header *ngIf="router.url.startsWith('/products') || router.url.startsWith('/preferences')"></app-header>
+<div class="page">
+  <router-outlet></router-outlet>
+</div>

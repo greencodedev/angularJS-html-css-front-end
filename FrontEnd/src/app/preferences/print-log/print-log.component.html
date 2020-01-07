@@ -1,0 +1,165 @@
+<app-preferences-navigation navigationType="printers"></app-preferences-navigation>
+
+<div class="form-row align-items-center print-log-top">
+  <div class="col-12 col-md-5 col-lg-3 py-2">
+    <div class="input-search">
+      <input type="text" placeholder="Search" [(ngModel)]="Criteria.TextSearch" (ngModelChange)="getPrintLogs()">
+    </div>
+    <!-- <button class="button-icon"><img src="/assets/images/filter-icon.png" alt="Filter"></button> -->
+  </div>
+  <div class="filter-set d-flex col-12 col-md-7 col-lg-5 py-2">
+    <div class="col-4 py-2">
+      <div class="btn-group w-100" dropdown>
+        <button id="select-user" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                aria-controls="dropdown-user">
+          {{ selectedUser.FirstName }} {{ selectedUser.LastName || 'User' }} <span class="caret"></span>
+        </button>
+        <ul id="dropdown-user" *dropdownMenu class="cat-list dropdown-menu"
+            role="menu" aria-labelledby="select-user">
+            <li class="dropdown-item" (click)="selectedUser = {};Criteria.UserId = null; getPrintLogs()">All</li>
+            <li role="menuitem" *ngFor="let user of users"><span class="dropdown-item" (click)="selectUser(user)"> <div class="circled sm"> {{ user.Initials }} </div> {{ user.FirstName }} {{ user.LastName }}</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-4 py-2">
+      <div class="btn-group w-100" dropdown>
+        <button id="select-printer" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                aria-controls="dropdown-printer">
+          {{ selectedPrinter.CustomName || selectedPrinter.Name || 'Printer' }} <span class="caret"></span>
+        </button>
+        <ul id="dropdown-printer" *dropdownMenu class="dropdown-menu"
+            role="menu" aria-labelledby="select-printer">
+            <li class="dropdown-item" (click)="selectedPrinter = {};Criteria.PrinterId = null; getPrintLogs()">All</li>
+          <li role="menuitem" *ngFor="let printer of printers"><span class="dropdown-item" (click)="selectPrinter(printer)"> {{ printer.CustomName || printer.Name }}</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-4 py-2">
+      <div class="btn-group w-100" dropdown>
+        <button id="select-status" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                aria-controls="dropdown-status">
+          {{ status || 'Status' }} <span class="caret"></span>
+        </button>
+        <ul id="dropdown-status" *dropdownMenu class="dropdown-menu"
+            role="menu" aria-labelledby="select-status">
+            <li class="dropdown-item" (click)="selectedStatus = '';Criteria.printJobStatus = null; getPrintLogs()">All</li>
+          <li role="menuitem" *ngFor="let status of statuses"><span class="dropdown-item" (click)="selectStatus(status)"> {{ status }}</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="input-search input-datepicker col-6 col-lg-2">
+    <input placeholder="Date Range" type="text" ngxDaterangepickerMd showClearButton="true" (change)="selectDate()" [(ngModel)]="selectedDate" class="form-control">
+  </div>
+  <div class="col-6 col-md-2 col-lg-2 py-2 text-right">
+      <button (click)="exportPrintLog()" class="button button--success export-btn">Export</button>
+  </div>
+</div>
+
+
+<div class="table-emb__container">
+  <table class="table table-emb">
+    <thead>
+      <th (click)="SortBy('Initials')" class="pointer">User
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Initials' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Initials'">
+      </th>
+      <th (click)="SortBy('printerId')" class="pointer">Printer ID
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'printerId' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'printerId'">
+      </th>
+      <th (click)="SortBy('printerName')" class="pointer">Printer Name
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'printerName' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'printerName'">
+      </th>
+      <th (click)="SortBy('productId')" class="pointer">Product ID
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'productId' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'productId'">
+      </th>
+      <th (click)="SortBy('productName')" class="pointer">Product Name
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'productName' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'productName'">
+      </th>
+      <th class="pointer">
+        Condition
+      </th>
+      <th (click)="SortBy('Quantity')" class="pointer">Quantity
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Quantity' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Quantity'">
+      </th>
+      <th (click)="SortBy('Created')" class="pointer">Time
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Created' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Created'">
+      </th>
+      <th (click)="SortBy('Status')" class="pointer">Status
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Status' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Status'">
+      </th>
+    </thead>
+    <tr *ngFor="let log of logs">
+      <!-- <td class="align-middle" title="{{ log.user.FirstName }} {{ log.user.LastName }}"> <div class="circled">{{ log.user.FirstName[0] | uppercase }}{{ log.user.LastName[0] | uppercase }}</div></td> -->
+      <td class="align-middle"><div class="circled"> {{ log.user.Initials }} </div></td>
+      <td class="align-middle"> {{ log.Printer.Id }}</td>
+      <td class="align-middle"> {{ log.Printer.CustomName || log.Printer.Name }}</td>
+      <td class="align-middle" title="{{ log.Product.FinaleId }}"> {{ log.Product.FinaleId}}</td>
+      <td class="align-middle" title="{{ log.Product.Description }}"> {{ log.Product.Name || ''}}</td>
+      <td class="align-middle"> {{  log.Product.Condition.Code }}</td>
+      <td class="align-middle"> {{ log.Quantity || '' }}</td>
+      <td class="align-middle"> {{ log.DateTime | date:'M/dd/yy h:mm a' }}</td>
+      <td class="align-middle text-center">
+        <div class="status"
+             [class.status--fail]="log.Status === 'Error'"
+             [class.status--pending]="log.Status === 'Pending'"
+             [class.status--true]="log.Status === 'Success'"></div>
+      </td>
+    </tr>
+  </table>
+  <div [hidden]="!loading" class="ldr-overlay">
+    <div class="lds-ripple">
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+</div>
+<div class="emb-pagination__container">
+  <div class="row mx-0">
+    <div class="emb-pagination">
+      <div class="row mx-0">
+        <div class="col-6 col-md-3">
+          <div class="btn-group" dropdown [dropup]="true">
+            <button id="button-dropup" dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                    aria-controls="dropdown-dropup">
+              {{ Criteria.Limit }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-dropup">
+              <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item" (click)="setPcsOnpage(pcs)"> {{ pcs }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+          <pagination [totalItems]="TotalCount"
+                        [(ngModel)]="Criteria.Page"
+                        [(itemsPerPage)]="Criteria.Limit"
+                        (pageChanged)="paginate($event)"
+                        [maxSize]="8"
+                        previousText="&lsaquo;  Back"
+                        nextText="Next  &rsaquo;"
+                        class="mb-0">
+          </pagination>
+        </div>
+        <div class="col-6 col-md-3 text-right">
+          <div class="btn-group">
+            <button id="button-dropup" type="button" class="btn btn-emb-gray ml-5"
+                    aria-controls="">
+                    TotalCount:
+              {{ TotalCount }}
+                   <span class="caret"></span>
+            </button>
+           </div>
+        </div>
+        <div class="col-3"></div>
+      </div>
+    </div>
+  </div>
+</div>

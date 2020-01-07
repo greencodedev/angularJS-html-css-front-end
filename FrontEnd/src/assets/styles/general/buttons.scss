@@ -1,0 +1,104 @@
+
+.button {
+  appearence: none;
+  border: 0;
+  border-radius: 30px;
+  background: #ededed;
+  padding: 12px 24px;
+  text-align: center;
+  min-width: 140px;
+  cursor: pointer;
+  transition: .2s;
+  outline: none;
+
+  &:hover {
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  &:active {
+    outline: none;
+    color: #eee;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &--success {
+    color: white;
+    background: #0a55a1;
+  }
+
+  &--disabled {
+    opacity: .6;
+    pointer-events: none;
+  }
+
+  &--cancel {
+    background: transparent;
+    color: #0a55a1;
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.button-icon {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.button-more {
+  border: 0;
+  position: relative;
+  transform: rotate(-90deg);
+  font-size: 18px;
+  color: #0a55a1;
+  cursor: pointer;
+  font-weight: 646;
+  outline: none;
+  background-color: white;
+}
+
+.button--edit {
+  color: #0a55a1;
+  font-weight: 700;
+  min-width: 90px;
+}
+
+.btn-sync {
+  height: 45px;
+  border-radius: 22.5px;
+  color: #8e8e8e;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.btn-sync:after {
+  content: url('~/assets/images/rotate.png');
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 18px;
+  height: 22px;
+  width: 22px;
+}
+
+.btn-sync.loading:after {
+  -webkit-animation: rotation 2s infinite linear;
+  }
+  
+  @-webkit-keyframes rotation {
+  from {
+  -webkit-transform: rotate(0deg);
+  }
+  to {
+  -webkit-transform: rotate(359deg);
+  }
+}

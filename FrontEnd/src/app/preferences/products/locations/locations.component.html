@@ -1,0 +1,87 @@
+<app-preferences-navigation navigationType="products"></app-preferences-navigation>
+
+<div class="sync-wrapper align-items-center d-flex">
+  <div>
+    <div class="input-search">
+        <input type="text" placeholder="Search" [(ngModel)]="Criteria.TextSearch" (ngModelChange)="GetSublocations()">
+    </div>
+  </div>
+
+  <div  class="input-toggle_wrap ml-auto">
+    <label class="input-toggle" for="allActive">
+      <input (change)="GetSublocations()" type="checkbox" class="input-toggle_input" name="allActive" id="allActive"
+              [(ngModel)]="Criteria.Status">
+      <span class="input-toggle_slider"></span>
+    </label>
+    <span class="input-toggle_label">{{Criteria.Status ? 'Only Active' : 'All'}}</span>
+  </div>
+
+  <div class="d-block emb-top-panel__last-synced">
+    <p>Last Synced</p>
+    <p>{{lastSynced | date: 'MM/dd/yyyy - hh:mm a'}}</p>
+  </div>
+  <button class="btn btn-sync" [ngClass]="{'loading' : syncing}" (click)= "Sync()" >
+    <span>Sync</span>
+  </button>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-emb__container">
+
+      <div [hidden]="!loading" class="ldr-overlay">
+        <div class="lds-ripple">
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+
+      <table class="table table-emb">
+        <thead>
+          <th (click)="SortBy('s.Name')" class="pointer name">Sublocation
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 's.Name' ">
+          </th>
+          <th (click)="SortBy('s.SublocationStatus')" class="pointer name">Status
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 's.SublocationStatus' ">
+          </th>
+          <th (click)="SortBy('p.Name')" class="pointer name">Location
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'p.Name' ">
+          </th>
+          <th class="text-right">Convertible From</th>
+          <th class="text-right">Convertible To</th>
+        </thead>
+        <tr *ngFor="let location of Sublocations">
+          <ng-container *ngIf="location.ParentLocation != null">
+            <td class="align-middle">{{location.Name}}</td>
+            <td class="align-middle">{{ location.Status == 1 ? 'Active' : 'Inactive' }}</td>
+            <td class="align-middle">{{location.ParentLocation?.Name}}</td>
+            <td class="align-middle text-right">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin">
+                    <input name="transfer" (change)="saveStatus()" [(ngModel)]="location.ConvertibleFrom" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                
+                <div class="switch__value">{{location.ConvertibleFrom ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+            <td class="align-middle text-right">
+              <div class="switch__container">
+                <div class="text-center">
+                  <label class="switch switch--margin">
+                    <input name="transfer" (change)="saveStatus()" [(ngModel)]="location.ConvertibleTo" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                
+                <div class="switch__value">{{location.ConvertibleTo ? 'Yes' : 'No'}}</div>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

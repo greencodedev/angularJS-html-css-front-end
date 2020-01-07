@@ -1,0 +1,160 @@
+<div class="container" id="products">
+  <div class="row emb-top-panel">
+    <div class="col-12">
+      <div class="form-row align-items-center">
+        <div class="col-12 col-md-3 py-2">
+          <div class="input-search">
+            <input type="text" placeholder="Search Item" [(ngModel)]="Criteria.TextSearch" (ngModelChange)="getProducts()">
+           
+          </div>
+        </div>
+        <div class="col-4 col-md-2 py-2">
+          <div class="btn-group w-100" dropdown>
+            <button id="select-category" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                    aria-controls="dropdown-category">
+              {{ selectedCategory.Label || 'Categories' }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-category" *dropdownMenu class="cat-list dropdown-menu"
+                role="menu" aria-labelledby="select-category">
+                <li class="dropdown-item" (click)="selectedCategory = {};Criteria.category = null; getProducts()">All</li>
+              <li role="menuitem" *ngFor="let category of categories"><span class="dropdown-item" (click)="selectCategory(category)"> {{ category.Label }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-4 col-md-2 py-2">
+          <div class="btn-group w-100" dropdown>
+            <button id="select-condition" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                    aria-controls="dropdown-condition">
+              {{ selectedCondition.Name || 'Condition' }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-condition" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="select-condition">
+              <li class="dropdown-item" (click)="selectedCondition = {};Criteria.Conditions = null; getProducts()">All</li>
+              <li role="menuitem" *ngFor="let condition of conditions"><span class="dropdown-item" (click)="selectCondition(condition)"> {{ condition.Name }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-4 col-md-2 py-2">
+          <div class="btn-group w-100">
+            <div class="input-search">
+              <input [(ngModel)]="selectedProductGroup"
+                     [typeahead]="productGroups"
+                     [typeaheadMinLength]="0"
+                     placeholder="Product Groups"
+                     (typeaheadOnSelect)="selectProductGroup(selectedProductGroup)" 
+                     (change)="groupChanged()" 
+                     class="btn-tp-select btn-block might-overflow">
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3 py-2 justify-content-end align-items-center d-flex">
+          <div class="d-block emb-top-panel__last-synced">
+            <p>Last Synced</p>
+            <p>{{lastSynced | date: 'MM/dd/yyyy - hh:mm a'}}</p>
+          </div>
+          <button class="btn btn-sync" [ngClass]="{'loading' : syncing}" (click)= "Sync()" >
+            <span>Sync</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="table-emb__container">
+    <table class="table table-emb TableProduct">
+      <thead class="productsTable"> 
+        <th (click)="SortBy('FinaleId')" class="pointer">Product ID
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'FinaleId' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="Criteria.Ascending || Criteria.SortBy != 'FinaleId'">
+        </th>
+        <th (click)="SortBy('Name')" class="pointer name">Name
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Name' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Name'">
+        </th>
+        <th (click)="SortBy('Label')"  class="pointer">Category
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'Label' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="Criteria.Ascending || Criteria.SortBy != 'Label'">
+        </th>
+        <th (click)="SortBy('co.Name')" class="pointer">Condition
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img rotate" [hidden]="!Criteria.Ascending || Criteria.SortBy != 'co.Name' ">
+        <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [hidden]="Criteria.Ascending || Criteria.SortBy != 'co.Name'">
+        </th>
+        <th></th>
+      </thead>
+      <tr *ngFor="let product of products">
+        <td class="align-middle"> {{ product.FinaleId }} </td>
+        <td class="align-middle" > <p [tooltip]="product.Name" [isDisabled]="!product.Name || product.Name.length < 60" class="might-overflow table-content-align-middle" [delay]="500">{{ product.Name }}</p> </td>
+        <td class="align-middle"> {{ product.Category && product.Category.Label }} </td>
+        <td class="align-middle"> {{ product.Condition?.Name || '' }} </td> 
+        <td class="align-middle">
+          <div class="table-emb__buttons">
+            <button *ngIf="User.Roles?.includes('Converter')" title="{{product.Ncs == null || product.Condition?.ConditionId == null ? 'This product is missing an NCS or condition' : (!userHasConditionsToConvertTo || !userHasLocationsToConvertFrom || !userFromConditions.includes(product.Condition?.ConditionId) ? 'Access to this feature/function is not granted.' : '')}}" [disabled]="product.Ncs == null || product.Condition?.ConditionId == null || !userHasConditionsToConvertTo || !userHasLocationsToConvertFrom || !userFromConditions.includes(product.Condition?.ConditionId)" class="btn btn-table-button btn-table-convert" (click)="openConvertModal(product)">Convert</button>
+            <button *ngIf="User.Roles?.includes('Printer')" class="btn btn-table-button" (click)="openPrintModal(product)">Print</button>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div [hidden]="!loading" class="ldr-overlay">
+      <div class="lds-ripple">
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+  <div class="emb-pagination__container">
+    <div class="row mx-0">
+      <div class="emb-pagination">
+        <div class="row mx-0">
+          <div class="col-6 col-md-3">
+            <div class="btn-group dropup dropup-no-controls" dropdown [dropup]="true">
+              <button id="button-dropup" dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                      aria-controls="dropdown-dropup">
+                {{ Criteria.Limit }} <span class="caret"></span>
+              </button>
+              <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                  role="menu" aria-labelledby="button-dropup">
+                <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item" (click)="setPcsOnpage(pcs)"> {{ pcs }}</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+            <pagination [totalItems]="TotalCount"
+                        [(ngModel)]="Criteria.Page"
+                        [(itemsPerPage)]="Criteria.Limit"
+                        (pageChanged)="paginate($event)"
+                        [maxSize]="8"
+                        previousText="&lsaquo;  Back"
+                        nextText="Next  &rsaquo;"
+                        class="mb-0">
+            </pagination>
+          </div>
+          <div class="col-6 col-md-3 text-right">
+            <div class="btn-group">
+              <button id="button-dropup" type="button" class="btn btn-emb-gray ml-5"
+                      aria-controls="">
+                      TotalCount:
+                        {{ TotalCount }} 
+                     <span class="caret"></span>
+              </button>
+             </div>
+          </div>
+          <div class="col-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="product" *ngFor="let product of products">
+  <p>Category: {{product.Category?.Label}}</p>
+  <h2>{{product.Name}}</h2>
+  <h3>{{product.Description}}</h3>
+
+  <div class="btn-group" dropdown>
+    <button dropdownToggle class="btn btn-primary dropdown-toggle">Choose Printer <span class="caret"></span></button>
+    <ul *dropdownMenu class="dropdown-menu">
+      <li *ngFor="let printer of printers"><a class="dropdown-item" href="#">{{printer.Name}}</a></li>
+    </ul>
+  </div>
+
+  <input size="5" type="text" placeholder="Quantity">
+  <button (click)="print(1, product.ProductId)">Print</button>
+</div> -->

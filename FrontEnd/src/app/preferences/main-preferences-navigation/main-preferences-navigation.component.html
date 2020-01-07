@@ -1,0 +1,49 @@
+<div class="sidebar" [class.sidebar--open]="isOpened$ | async">
+  <accordion [closeOthers]="true">
+    <accordion-group [isOpen]="router.routerState.snapshot.url == '/preferences/locations' || router.routerState.snapshot.url == '/preferences/conditions' || router.routerState.snapshot.url == '/preferences/avg-cost-log'">
+      <button class="btn btn-link btn-block clearfix sidebar__header" accordion-heading>
+        <img src="/assets/images/icon-box.png" alt="" class="sidebar__icon">
+        Products
+      </button>
+      <ul class="sidebar__links">
+        <li><a routerLink="/preferences/locations" class="sidebar__link" routerLinkActive="sidebar__link--active">Manage
+          Locations</a></li>
+        <li><a routerLink="/preferences/conditions" class="sidebar__link" routerLinkActive="sidebar__link--active">Manage
+          Conditions</a></li>
+        <li><a routerLink="/preferences/avg-cost-log" class="sidebar__link" routerLinkActive="sidebar__link--active">
+          Average Cost Log</a></li>
+      </ul>
+    </accordion-group>
+    <accordion-group [isOpen]="router.routerState.snapshot.url == '/preferences/printer-setup' || router.routerState.snapshot.url == '/preferences/label-setup' || router.routerState.snapshot.url == '/preferences/print-log'">
+      <button class="btn btn-link btn-block clearfix sidebar__header" accordion-heading>
+        <img src="/assets/images/icon-printer.png" alt="" class="sidebar__icon">
+        Printer Setting
+      </button>
+      <ul class="sidebar__links">
+        <li><a routerLink="/preferences/printer-setup" class="sidebar__link" routerLinkActive="sidebar__link--active">
+          Manage Printers
+        </a></li>
+        <li><a routerLink="/preferences/label-setup" class="sidebar__link" routerLinkActive="sidebar__link--active">
+          Label Setup
+        </a></li>
+        <li><a routerLink="/preferences/print-log" class="sidebar__link" routerLinkActive="sidebar__link--active">
+          Print Logs
+        </a></li>
+      </ul>
+    </accordion-group>
+    <a class="sidebar__header-link"
+       routerLink="/preferences/convert-log"
+       accordion-heading
+       routerLinkActive="sidebar__header-link--active">
+        <img src="/assets/images/icon-exchange.png" alt="" class="sidebar__icon">
+        Convert logs
+    </a>
+    <a class="sidebar__header-link"
+       routerLink="/preferences/users"
+       accordion-heading
+       routerLinkActive="sidebar__header-link--active">
+          <img src="/assets/images/icon-user.png" alt="" class="sidebar__icon">
+          Users
+    </a>
+  </accordion>
+</div>

@@ -1,0 +1,216 @@
+.modal-footer {
+  padding: 30px 0;
+}
+
+.modal-body {
+  padding: 1rem 5rem;
+}
+
+.modal-body.main-body {
+  height: 450px;
+  overflow-y: scroll;
+}
+
+.input_container--small {
+  max-width: 110px;
+}
+
+.input_container--small .input {
+  text-align: center;
+}
+
+.modal-header {
+  padding: 1rem 1rem 1rem 2rem;
+  align-items: center;
+}
+
+.tabset {
+  display: flex;
+  justify-content: space-around;
+  color: #fff;
+  max-width: 77%;
+  margin: 0 auto;
+}
+
+.tabset label {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 14px 4px 10px 4px;
+}
+
+.tabset label.selected {
+  border-bottom: 4px solid #fff;
+  margin: 0px;
+}
+
+.tabset input {
+  display: none;
+}
+
+.input-wrapper {
+  flex-flow: wrap;
+}
+
+.input-wrapper .input_container {
+  margin-right: 20px;
+}
+
+.input-toggle_wrap {
+  justify-content: left;
+  margin: 35px 0;
+}
+
+.input-toggle_label {
+  font-weight: 600;
+}
+
+.modal-prev {
+  width: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.modal-body1 {
+  /* padding: 2rem 1rem 1.8rem 2rem; */
+  padding: 0px;
+  background: #0a55a1;
+}
+
+.modal-body_title {
+  color: #0a55a1;
+  margin: 0;
+}
+
+.modal-body_subtitle {
+  color: #0a55a1;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-size: 18px;
+  padding-left: 40px;
+}
+
+.modal-body-convert .btn-group {
+  align-items: center;
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.modal-body-convert .table-emb .name {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 0;
+}
+
+/* .modal-body-convert .table-emb .name .active {
+  
+} */
+
+.modal-body-convert .table-emb .name :not(.active) {
+  color: #aaa;
+  cursor: pointer;
+}
+
+.modal-body-convert .table-emb thead th {
+  color: #000;
+}
+
+.button-role {
+  background: #fff;
+  color: #aaa;
+  border: 2px solid #aaa;
+  font-size: 16px;
+  padding: 4px 18px;
+  min-width: 90px;
+  margin: 0 8px;
+  font-weight: 700;
+  /* background: #fff;
+  color: #0a55a1;
+  font-size: 13px;
+  padding: 6px;
+  min-width: 90px;
+  margin: 0 3px; */
+}
+
+.button--select:after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 6px 0 6px;
+  border-color: #0a55a1 transparent transparent transparent;
+  top: 10px;
+  position: relative;
+  right: -6px;
+}
+
+.button--active {
+  /* color: white;
+  background: #0a55a1; */
+  color: #0a55a1;
+  border: 2px solid #0a55a1;
+}
+
+.button--active.button--select:after {
+  border-color: #fff transparent transparent transparent; 
+}
+
+.printers_container {
+  padding: 2rem;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.printers_printer {
+  padding: 1rem 0;
+  font-size: 15px;
+  color: #999999;
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.printers_checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.printers_checkbox-container--absolute {
+  position: absolute;
+}
+
+.printers_checkbox {
+  appearance: none;
+  border: 1px solid #0a55a1;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.printers_checkbox:checked {
+  background: #0a55a1;
+}
+
+.printers_label {
+  margin: 0;
+}
+
+.printers_info {
+  width: 16px;
+  height: 16px;
+}
+
+@media(max-width: 991px) {
+  .modal-body {
+    padding: 1rem;
+  }
+}
+
+.slider.round.locDisabled {
+  background-color: #ccc;
+}

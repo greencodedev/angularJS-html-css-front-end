@@ -1,0 +1,135 @@
+.sidebar {
+  position: fixed;
+  top: 83px;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.08) 4px 1px 3px 0;
+  height: calc(100vh - 83px);
+  z-index: 1;
+  max-width: 0;
+  overflow: hidden;
+}
+
+.sidebar--open {
+  max-width: 250px;
+}
+
+.sidebar_toggler {
+  position: absolute;
+  cursor: pointer;
+}
+
+.sidebar__header {
+  text-align: left;
+  text-decoration: none;
+  position: relative;
+  padding: 10px 0;
+}
+
+.sidebar__header:after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 0 8px;
+  border-color: #0a55a1 transparent transparent transparent;
+  top: 15px;
+  border-radius: 10px;
+}
+
+.sidebar__links {
+  list-style-type: none;
+}
+
+.sidebar__link {
+  color: #828282;
+  font-weight: 500;
+  margin: 30px 0;
+  display: block;
+}
+
+.sidebar__link::before {
+  content: "";
+  background: #d6d1d1;
+  font-weight: bold;
+  display: inline-block;
+  width: 8px;
+  margin-left: -1em;
+  height: 7px;
+  margin-right: 11px;
+}
+
+.sidebar__link--active {
+  color: #0a55a1;
+}
+
+.sidebar__link--active::before {
+  background: #0a55a1;
+}
+
+.sidebar__header-link {
+  padding: 20px;
+  margin-bottom: 0;
+  background-color: #f3f3f3;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: 600;
+  color: #0a55a1;
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar__icon {
+  margin-right: 10px;
+}
+
+.panel-open .sidebar__icon,
+.sidebar__header-link--active .sidebar__icon {
+  filter: brightness(0) invert(1);
+}
+
+/deep/ .card {
+  border: 0;
+}
+
+/deep/ .card-body {
+  padding: 0;
+}
+
+/deep/ .card-header {
+  cursor: pointer;
+}
+
+/deep/ .card-header:first-child {
+  border-radius: 0;
+}
+
+/deep/ .btn-link {
+  font-weight: 600;
+  color: #0a55a1;
+}
+
+/deep/ .btn-link:hover {
+  text-decoration: none;
+}
+
+/deep/ .panel-open .card-header,
+.sidebar__header-link--active {
+  background: #2a7dd2;
+}
+
+/deep/ .panel-open .btn-link,
+.sidebar__header-link--active {
+  color: white;
+}
+
+/deep/ .panel-open .sidebar__header:after {
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent white transparent;
+}
+
+/deep/ .sidebar:not(.sidebar--open) .panel-heading {
+  padding: 0;
+}

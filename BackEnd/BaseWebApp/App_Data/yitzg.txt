@@ -1,0 +1,25 @@
+﻿
+CREATE TABLE `Jobs` (
+  `JobId` int(11) NOT NULL AUTO_INCREMENT,
+  `JobType` varchar(255) NOT NULL,
+  `StartTime` datetime NOT NULL,
+  `EndTime` datetime DEFAULT NULL,
+  `Result` varchar(255) NOT NULL,
+  PRIMARY KEY (`JobId`)
+) ENGINE=InnoDB AUTO_INCREMENT=15093 DEFAULT CHARSET=latin1;
+
+
+Alter table Printers
+add Active bit(1) not null default 0;
+
+
+update Printers set Active = 1 where PrinterId = 1;
+
+
+alter table PrinterSizes
+add Label varchar(45) not null;
+
+
+
+alter table Printers
+add CustomName varchar(250) null;

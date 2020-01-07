@@ -1,0 +1,17 @@
+.switch__container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.switch {
+  margin: 0 10px;
+}
+
+.switch__value {
+  width: 26px;
+}
+
+.input-toggle_wrap {
+  margin-right: 20px;
+}

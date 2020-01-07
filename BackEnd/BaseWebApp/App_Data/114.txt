@@ -1,0 +1,123 @@
+﻿
+//add migration to idty_users to have AccountId
+// assign accountid to all existing users
+
+
+//create account table
+create table Accounts (
+AccountId int AUTO_INCREMENT PRIMARY KEY,
+CompanyName varchar(255),
+Email varchar(255),
+FirstName varchar(255),
+LastName varchar(255),
+Phone varchar(255),
+Address varchar(255),
+Status varchar(45)
+);
+
+//Products table 
+alter table Products add column AccountId int after ProductId, add constraint foreign key(AccountId) references Accounts(AccountId);
+
+//change unique index
+SHOW INDEX FROM Products;
+alter table Products DROP INDEX FinaleId
+alter table Products DROP INDEX FinaleId_2
+ALTER TABLE `Products` ADD UNIQUE `Product_Account_Unique`(`FinaleId`, `AccountId`);
+update Products set AccountId = '1' where ProductId > 0
+
+
+
+//printers
+alter table Printers add column AccountId int after PrinterId, add constraint foreign key(AccountId) references Accounts(AccountId);
+
+ SHOW INDEX FROM Printers;
+alter table Printers DROP INDEX idx_Printers_Id
+ALTER TABLE `Printers` ADD UNIQUE `Printer_Account_Unique`(`Id`, `AccountId`);
+update Printers set AccountId = '1' where PrinterId > 0
+
+
+//printerSize
+
+alter table PrinterSizes add column AccountId int after PrinterSizeId , add constraint foreign key(AccountId) references Accounts(AccountId);
+
+SHOW INDEX FROM PrinterSizes;
+alter table PrinterSizes DROP INDEX Name_UNIQUE;
+ALTER TABLE `PrinterSizes` ADD UNIQUE `Name_Account_Unique`(`Name`, `AccountId`);
+update PrinterSizes set AccountId = '1' where PrinterSizeId > 0
+
+//cat
+alter table Categories add column AccountId int after CategoryId, add constraint foreign key(AccountId) references Accounts(AccountId);
+ SHOW INDEX FROM Categories;
+alter table Categories drop index AttrName;
+
+ALTER TABLE `Categories` ADD UNIQUE `AttrName_Account_Unique`(`AttrName`, `AccountId`);
+
+update Categories set AccountId = '1' where CategoryId > 0
+
+
+/conditions
+
+alter table Conditions add column AccountId int after ConditionId, add constraint foreign key(AccountId) references Accounts(AccountId);
+ SHOW INDEX FROM Conditions;
+ 
+alter table Conditions drop index Name_2;alter table Conditions drop index Name;
+
+ALTER TABLE `Conditions` ADD UNIQUE `Name_Account_Unique`(`Name`, `AccountId`);
+
+update Conditions set AccountId = '1' where ConditionId > 0
+
+
+//conversions
+
+alter table Conversions add column AccountId int after ConversionId, add constraint foreign key(AccountId) references Accounts(AccountId);
+update Conversions set AccountId = '1' where ConversionId > 0
+
+//jobs
+alter table Jobs add column AccountId int after JobId, add constraint foreign key(AccountId) references Accounts(AccountId);
+update Jobs set AccountId = '1' where JobId > 0
+
+//lookup
+alter table Lookup add column AccountId int after Id, add constraint foreign key(AccountId) references Accounts(AccountId);
+update Lookup set AccountId = '1' where Id > 0;
+show indexes from Lookup
+alter table Lookup drop index lookup_name_value
+
+ALTER TABLE `Lookup` ADD UNIQUE `Type_Value_Account_Unique`(`AccountId`,`LookupType`, `LookupValue`);
+
+
+//printJobs
+alter table PrintJobs add column AccountId int after PrintJobId, add constraint foreign key(AccountId) references Accounts(AccountId);
+
+update PrintJobs set AccountId = '1' where  PrintJobId > 0
+
+
+//settings
+alter table Settings add column AccountId int after id, add constraint foreign key(AccountId) references Accounts(AccountId);
+
+update Settings set AccountId = '1' where  id> 0
+
+//sub locations
+
+alter table Sublocations add column AccountId int after SublocationId, add constraint foreign key(AccountId) references Accounts(AccountId);
+
+update Sublocations set AccountId = '1' where  SublocationId > 0;
+
+alter table Sublocations drop index FinaleSublocationId;
+
+alter table `Sublocations` add unique `SublocationId_Account_Unique`(`FinaleSublocationId`,`AccountId`);
+
+
+ SET FOREIGN_KEY_CHECKS = 0;  //?? Not sure you want to do this on production??
+alter table Products modify column AccountId int not null;
+alter table Printers modify column AccountId int not null;
+alter table PrinterSizes modify column AccountId int not null;
+alter table Categories modify column AccountId int not null;
+alter table Conditions modify column AccountId int not null;
+alter table Conversions modify column AccountId int not null;
+alter table Jobs modify column AccountId int not null;
+alter table Lookup modify column AccountId int not null;
+alter table PrintJobs modify column AccountId int not null;
+alter table Settings modify column AccountId int not null;
+alter table Sublocations modify column AccountId int not null;
+
+SET FOREIGN_KEY_CHECKS = 1;

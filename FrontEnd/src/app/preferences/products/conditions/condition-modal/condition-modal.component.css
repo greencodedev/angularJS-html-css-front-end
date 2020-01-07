@@ -1,0 +1,31 @@
+.modal-header {
+  padding: 1rem 2rem;
+}
+.modal-body1 {
+  padding: 2.4rem 2rem 1.8rem;
+  background: #ededed;
+}
+.modal-body2 {
+  padding: 2rem 0;
+}
+.modal-body_title {
+  font-size: 15px;
+}
+.modal-title {
+  font-size: 23px;
+  color: #8e8e8e;
+  font-weight: 300;
+}
+strong {
+  font-weight: 900;
+  font-size: 14px;
+  color: #555;
+}
+
+input {
+  width: 100%;
+  max-width: 390px;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #555;
+}

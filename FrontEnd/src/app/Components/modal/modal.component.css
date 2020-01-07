@@ -1,0 +1,141 @@
+.label-emb {
+  font-weight: bold;
+  color: #8e8e8e;
+  padding: 0 15px;
+}
+.input-emb {
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #ededed;
+  color: #000000;
+  text-align: center;
+  line-height: normal;
+  padding: 5px 30px;
+  width: 100%;
+  border-color: #ededed;
+  height: 45px;
+}
+.input-emb:focus {
+  box-shadow: none;
+  background-color: rgba(237,237,237, 0.5);
+}
+input[type='number'].input-emb  {
+    -moz-appearance: textfield;
+}
+input[type='number'].input-emb::-webkit-outer-spin-button,
+input[type='number'].input-emb::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+.btn-modal-print {
+  border-radius: 20px;
+  font-size: 14px;
+  background-color: #0a55a1;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px 30px;
+  line-height: normal;
+}
+.modal-header--emb {
+  padding: 20px;
+  color: #777777;
+  font-size: 18px;
+}
+.modal-header--emb h5 {
+  font-weight: 300;
+}
+.modal-body--emb {
+  padding: 20px 25px 75px;
+  font-size: 14px;
+  min-height: 250px;
+}
+.modal-footer--emb {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+.emb-list-of-printers {
+  position: relative;
+}
+
+.emb-list-of-printers__input {
+  height: 45px;
+  background-color: #ededed;
+  color: #000000;
+  border-radius: 22.5px;
+  border: 0;
+  padding: 0 15px;
+  cursor: pointer;
+}
+.emb-list-of-printers__arrow {
+  display: block;
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  right: 20px;
+  border: 8px solid transparent;
+  border-top: 8px solid #d5d5d5;
+  top: 20px;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+.emb-list-of-printers__input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.emb-list-of-printers__input:focus + .emb-list-of-printers__arrow{
+  border-top: 8px solid #0a55a1;
+}
+.emb-list-of-printers__input--with-list {
+  border-radius: 22.5px 22.5px 0 0;
+  border: 0;
+}
+/* .emb-list-of-printers__input:focus + .emb-list-of-printers__container {
+  display: block;
+} */
+.emb-list-of-printers__container {
+  z-index: 3;
+  display: block;
+  position: absolute;
+  top: 45px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  border-radius: 0 0 22.5px 22.5px;
+  box-shadow: 0 16px 10px rgba(0, 0, 0, 0.2);
+}
+.emb-list-of-printers__list {
+  border-top: 1px solid #d8d8d8;
+  overflow-y: scroll;
+  max-height: 230px;
+  background-color: #ededed;
+}
+.emb-list-of-printers__container:after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 22.5px;
+  border-radius: 0 0 22.5px 22.5px;
+  background-color: #ededed;
+}
+.emb-list-of-printers__container li {
+  background-color: #ededed;
+  cursor: pointer;
+  padding: 15px;
+}
+.emb-list-of-printers__container li > div {
+  width: 50%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.emb-list-of-printers__printer-type {
+  text-align: middle
+}
+.emb-list-of-printers__container li:hover {
+  background-color: #d5d5d5;
+}
+
+.form-disabled {
+  pointer-events: none;
+  opacity: .5;
+}

@@ -1,0 +1,25 @@
+<form class="page page-small" (ngSubmit)="login()">
+  <div class="page-small_header">
+    <img src="/assets/images/logo-blue.png" alt="EMB Phones Login">
+  </div>
+  <div class="page-small_body">
+    <div class="input_container">
+      <label for="usrnm" class="input_label">Username</label>
+      <input id="usrnm" type="text" name="username" [(ngModel)]="UserName" class="input"/>
+    </div>
+    <div class="input_container">
+      <label for="pswrd" class="input_label">Password</label>
+      <input id="pswrd" type="password" name="password" [(ngModel)]="Password" class="input"/>
+    </div>
+    <div class="page-small_footer">
+      <button class="button button--success signinBtn" [ngClass]="{'loading' : syncing}">Login</button>
+      <!-- <button class="button button--success signinBtn" [ngClass]="{'loading' : syncing}" [hidden]="!loading"></button> -->
+
+    </div>
+  </div>
+</form>
+
+<div class="page-small_after">
+  <a routerLink="/forgot-password" class="link">Forgot my password</a>
+</div>
+

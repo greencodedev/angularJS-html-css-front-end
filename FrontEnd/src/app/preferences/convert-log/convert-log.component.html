@@ -1,0 +1,227 @@
+<div class="container">
+  <div class="row emb-top-panel spaced">
+    <div class="col-12">
+      <div class="form-row align-items-center">
+        <div class="col-sm-2">
+          <div class="input-search">
+            <input type="text" placeholder="Search" [(ngModel)]="Criteria.TextSearch"
+                   (ngModelChange)="getConvertLogs()">
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="btn-group w-100">
+            <div class="input-search">
+              <input [(ngModel)]="productSelected"
+                     [typeahead]="productsDataSource"
+                     typeaheadOptionField="Name"
+                     (typeaheadOnSelect)="selectProduct($event)"
+                     [typeaheadAsync]="true"
+                     (change)="productChanged()"
+                     placeholder="Product"
+                     class="btn-tp-select btn-block might-overflow">
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          <div class="btn-group w-100">
+            <div class="input-search">
+              <input [(ngModel)]="sublocationSelecte"
+                     [typeahead]="locationDateSource"
+                     [typeaheadOptionsLimit]="0"
+                     typeaheadOptionField="Name"
+                     placeholder="Sublocation"
+                     [typeaheadAsync]="true"
+                     (typeaheadOnSelect)="selectSubLocation($event)"
+                     (change)="subLocationChanged()"
+                     class="btn-tp-select btn-block might-overflow">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="btn-group w-100" dropdown>
+            <button id="select-user" dropdownToggle type="button" class="btn btn-tp-select btn-block dropdown-toggle"
+                    aria-controls="dropdown-user">
+              {{ selectedUser.FirstName }} {{ selectedUser.LastName || 'User' }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-user" *dropdownMenu class="cat-list dropdown-menu"
+                role="menu" aria-labelledby="select-user">
+              <li class="dropdown-item" (click)="selectedUser = {};Criteria.UserId = null; getConvertLogs()">All</li>
+              <li role="menuitem" *ngFor="let user of users"><span class="dropdown-item" (click)="selectUser(user)"> <div
+                class="circled sm"> {{ user.Initials }} </div>
+                {{ user.FirstName }} {{ user.LastName }}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="input-search input-datepicker col-sm-4">
+            <input type="text" ngxDaterangepickerMd showClearButton="true" (change)="selectDate()"
+                   [(ngModel)]="selectedDate" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-2 text-right ml-auto">
+          <button (click)="exportConvertLog()" class="button button--success">Export</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-emb__container">
+      <table class="table table-emb">
+        <thead>
+        <th (click)="SortBy('u.Initials')" class="pointer">User
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'u.Initials' ">
+        </th>
+        <th (click)="SortBy('ConversionId')" class="pointer">
+          ID
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'ConversionId' ">
+        </th>
+        <th (click)="SortBy('frP.ProductId')" class="pointer">
+          Product ID
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'frP.ProductId' ">
+        </th>
+        <th (click)="SortBy('frP.Name')" class="pointer name">Product Name
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'frP.Name' ">
+        </th>
+        <th (click)="SortBy('frC.Code')" class="pointer">Condition
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'frC.Code' ">
+        </th>
+        <th (click)="SortBy('frCat.Label')" class="pointer">Category
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'frCat.Label' ">
+        </th>
+        <th (click)="SortBy('frS.Name')" class="pointer">Location
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'frS.Name' ">
+        </th>
+        <th (click)="SortBy('PoNumber')" class="pointer">PO
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'PoNumber' ">
+        </th>
+        <th (click)="SortBy('Quantity')" class="pointer">QTY
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'Quantity' ">
+        </th>
+        <th (click)="SortBy('Created')" class="pointer">Date
+          <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending"
+               [hidden]="Criteria.SortBy != 'Created' ">
+        </th>
+        </thead>
+
+        <div [hidden]="!loading" class="ldr-overlay">
+          <div class="lds-ripple">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+
+        <tr *ngFor="let log of logs" class="log">
+          <td class="text-center">
+            <div class="log_row">
+              <div class="circled" title="{{log.user.FirstName}} {{log.user.LastName}}">
+                {{log.user.Initials}}
+              </div>
+            </div>
+            <div class="log_row log_row--end">
+              <img alt="change" class="exchange-icon" src="/assets/images/logs-arrow.png">
+            </div>
+          </td>
+          <td class="text-center">
+            <div class="log_row">{{log.ConversionId}}</div>
+          </td>
+          <td class="text-center finale-id">
+            <div class="log_row">#{{log.FromProduct.FinaleId}}</div>
+            <div class="log_row">#{{log.ToProduct.FinaleId}}</div>
+            <div class="log_row note-label" *ngIf="log.Note">Notes:</div>
+          </td>
+          <td class="text-center prod-name">
+            <div class="log_row">{{log.FromProduct.Name}}</div>
+            <div class="log_row">{{log.ToProduct.Name}}</div>
+            <div class="log_row note" *ngIf="log.Note"><span><span class="log-note" [tooltip]="log.Note">{{log.Note}}</span></span></div>
+          </td>
+          <td class="text-center">
+            <div class="log_row">{{log.FromProduct.Condition.Code}}</div>
+            <div class="log_row">{{log.ToProduct.Condition.Code}}</div>
+          </td>
+          <td class="text-center">
+            <div class="log_row">{{log.FromProduct.Category.Label}}</div>
+            <div class="log_row">{{log.ToProduct.Category.Label}}</div>
+          </td>
+
+          <td class="text-center">
+            <div class="log_row">{{log.FromSublocation.Name}}</div>
+            <div class="log_row">{{log.ToSublocation.Name}}</div>
+          </td>
+
+          <td class="text-center">
+            <div class="log_row">{{log.PoNumber}}</div>
+          </td>
+          <td class="text-center">
+            <div class="log_row">{{log.Quantity}}</div>
+          </td>
+          <td class="text-center">
+            <div class="log_row">
+              {{log.DateTime | date: 'M/dd/yy h:mm a'}}
+            </div>
+            <div class="log_row">
+              <div class="log_new" *ngIf="log.CreateNewProduct">New product</div>
+              <div class="log_new" *ngIf="log.ConvertType == 'item'">To Item</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="emb-pagination__container">
+  <div class="row mx-0">
+    <div class="emb-pagination">
+      <div class="row mx-0">
+        <div class="col-6 col-md-3">
+          <div class="btn-group" dropdown [dropup]="true">
+            <button dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                    aria-controls="dropdown-dropup">
+              {{ Criteria.Limit }} <span class="caret"></span>
+            </button>
+            <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-dropup">
+              <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item"
+                                                                         (click)="setPcsOnpage(pcs)"> {{ pcs }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+          <pagination [totalItems]="TotalCount"
+                      [(ngModel)]="Criteria.Page"
+                      [(itemsPerPage)]="Criteria.Limit"
+                      (pageChanged)="paginate($event)"
+                      [maxSize]="8"
+                      previousText="&lsaquo;  Back"
+                      nextText="Next  &rsaquo;"
+                      class="mb-0">
+          </pagination>
+        </div>
+        <div class="col-6 col-md-3 text-right">
+          <div class="btn-group">
+            <button id="button-dropup" type="button" class="btn btn-emb-gray ml-5"
+                    aria-controls="">
+              TotalCount:
+              {{ TotalCount }}
+              <span class="caret"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

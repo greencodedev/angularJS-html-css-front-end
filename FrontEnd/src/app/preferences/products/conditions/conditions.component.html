@@ -1,0 +1,53 @@
+<app-preferences-navigation navigationType="products"></app-preferences-navigation>
+
+<div class="sync-wrapper justify-content-end align-items-center d-flex">
+  <div class="d-block emb-top-panel__last-synced">
+    <p>Last Synced</p>
+    <p>{{lastSynced | date: 'MM/dd/yyyy - hh:mm a'}}</p>
+  </div>
+  <button class="btn btn-sync" [ngClass]="{'loading' : syncing}" (click)= "Sync()" >
+    <span>Sync</span>
+  </button>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="table-emb__container">
+      <table class="table table-emb">
+        <thead>
+        <th>Condition Name</th>
+        <th>Code (#)</th>
+        <th>Description</th>
+        <th>Convertible</th>
+        <th class="text-right">Actions</th>
+        </thead>
+        <div [hidden]="!loading" class="ldr-overlay">
+          <div class="lds-ripple">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <tr *ngFor="let condition of conditions">
+          <td class="align-middle">{{condition.Name}}</td>
+          <td *ngIf="condition.Code" class="align-middle">({{condition.Code}})</td>
+          <td *ngIf="!condition.Code" class="align-middle"></td>
+          <td class="align-middle">{{condition.Description}}</td>
+          <td class="align-middle">
+            <div class="switch__container">
+              <div class="text-center">
+                <label class="switch switch--margin">
+                  <input name="transfer" (change)="setConvertible(condition)" [(ngModel)]="condition.Convertible" type="checkbox">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <div class="switch__value">{{condition.Convertible ? 'Yes' : 'No'}}</div>
+            </div>
+          </td>
+          <td class="align-middle text-right">
+            <button class="button button--edit" (click)="openEditConditionPopup(condition)">Edit</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

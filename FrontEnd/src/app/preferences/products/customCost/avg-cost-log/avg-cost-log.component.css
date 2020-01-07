@@ -1,0 +1,35 @@
+.print-log-top {
+  margin: 25px 0 15px 0;
+}
+
+#dropdown-user .dropdown-item {
+  padding: 0.25rem .75rem;
+}
+
+.table-emb__container {
+  position: relative;
+}
+
+.arrow-img{
+  height: 18px;
+}
+
+.btn-tp-select {
+  height: 45px;
+  border-radius: 22.5px;
+  color: #8e8e8e;
+  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+.btn-tp-select.dropdown-toggle:after {
+  border-top: 0.3em solid #0a55a1;
+}
+
+.filter-set > div {
+  padding-left: 5px;
+  padding-right: 5px;
+}

@@ -1,0 +1,114 @@
+<app-preferences-navigation navigationType="printers"></app-preferences-navigation>
+
+<div class="row">
+  <div class="col-sm-12">
+    <div class="preferences_header">
+      <div>
+        <div class="input-search">
+            <input type="text" placeholder="Search" [(ngModel)]="Criteria.TextSearch" (ngModelChange)="getPrinters()">
+        </div>
+      </div>
+
+      <div  class="input-toggle_wrap ml-auto">
+        <label class="input-toggle" for="allActive">
+          <input (change)="getPrinters()" type="checkbox" class="input-toggle_input" name="allActive" id="allActive"
+                  [(ngModel)]="Criteria.Status">
+          <span class="input-toggle_slider"></span>
+        </label>
+        <span class="input-toggle_label">{{Criteria.Status ? 'Only Active' : 'All'}}</span>
+      </div>
+
+      <!-- <div class="table-label-size">Label Size</div> -->
+      <div class="d-block emb-top-panel__last-synced">
+        <p>Last Synced</p>
+        <p>{{lastSynced | date: 'MM/dd/yyyy - hh:mm a'}}</p>
+      </div>
+      <button class="btn btn-sync" [ngClass]="{'loading' : syncing}" (click)="Sync()">
+        <span>Sync</span>
+      </button>
+    </div>
+
+    <div class="table-emb__container">
+      <table class="table table-emb">
+        <thead>
+          <th></th>
+          <th (click)="SortBy('Id')" class="pointer name">ID
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'Id' ">
+          </th>
+          <th (click)="SortBy('p.Name')"  class="pointer">Name
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'p.Name' ">
+          </th>
+          <th (click)="SortBy('CustomName')" class="pointer">Custom Name
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'CustomName' ">
+          </th>
+          <th (click)="SortBy('State')" class="pointer">Status
+              <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'State' ">
+            </th>
+          <th (click)="SortBy('ps.Name')" class="pointer">Size
+            <img src="../../assets/images/arrowUp.png" alt="" class="arrow-img" [class.rotate]="!Criteria.Ascending" [hidden]="Criteria.SortBy != 'ps.Name' ">
+          </th>
+          <th></th>
+        </thead>
+
+        <div [hidden]="!loading" class="ldr-overlay">
+          <div class="lds-ripple">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+
+        <tr *ngFor="let printer of Printers; let i = index;">
+          <td class="align-middle">
+            <div class="status status--{{printer.Active}}"></div>
+          </td>
+          <td class="align-middle">{{printer.Id}}</td>
+          <td class="align-middle">{{printer.Name}}</td>
+          <td class="align-middle">{{printer.CustomName}}</td>
+          <td class="align-middle">{{ (printer.State == 2 ? "Online" : "Offline") }}</td>
+          <td class="align-middle">
+            <button *ngIf="printer.Size.Name" class="button button--disabled table-emb__button-like">{{printer.Size.Name}}</button>
+          </td>
+          <td class="align-middle narrow">
+            <button type="button" class="button button--edit" (click)="editPrinterSetup(printer)">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="Criteria.Paginate" class="emb-pagination__container">
+      <div class="row mx-0">
+        <div class="emb-pagination">
+          <div class="row mx-0">
+            <div class="col-6 col-md-3">
+              <div class="btn-group" dropdown [dropup]="true">
+                <button id="button-dropup" dropdownToggle type="button" class="btn btn-emb-gray dropdown-toggle"
+                        aria-controls="dropdown-dropup">
+                  {{ Criteria.Limit }} <span class="caret"></span>
+                </button>
+                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                    role="menu" aria-labelledby="button-dropup">
+                  <li role="menuitem" *ngFor="let pcs of pcsVariables"><span class="dropdown-item"
+                                                                             (click)="setPcsOnpage(pcs)"> {{ pcs }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+              <pagination [totalItems]="TotalCount"
+                          [(ngModel)]="Criteria.Page"
+                          [(itemsPerPage)]="Criteria.Limit"
+                          (pageChanged)="paginate($event)"
+                          [maxSize]="8"
+                          previousText="&lsaquo;  Back"
+                          nextText="Next  &rsaquo;"
+                          class="mb-0">
+              </pagination>
+            </div>
+            <div class="col-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
