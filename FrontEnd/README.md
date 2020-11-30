@@ -1,3 +1,8 @@
+this project is admin panel based on Angular.
+// run project
+ yarn install
+ npm start ( or ng serve )
+
 # Portal
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.2.
